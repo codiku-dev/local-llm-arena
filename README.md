@@ -38,7 +38,7 @@ npm install
 Run development server:
 
 ```bash
-bun run dev
+npm run dev
 ```
 
 Alternative:
@@ -52,13 +52,13 @@ By default, the app runs on [http://localhost:3000](http://localhost:3000).
 ## Build
 
 ```bash
-bun run build
+npm run build
 ```
 
 Preview production build:
 
 ```bash
-bun run preview
+npm run preview
 ```
 
 ## How to Use
