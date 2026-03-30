@@ -17,7 +17,6 @@ It is designed to work with any server exposing an OpenAI-compatible API shape (
 
 - React 18
 - Vite 5
-- Plain CSS
 
 ## Prerequisites
 
@@ -29,13 +28,8 @@ It is designed to work with any server exposing an OpenAI-compatible API shape (
 
 ## Getting Started
 
-Install dependencies (Bun preferred):
+Install dependencies :
 
-```bash
-bun install
-```
-
-Alternative:
 
 ```bash
 npm install
@@ -75,7 +69,3 @@ bun run preview
 4. Enter a prompt and click **Run**.
 5. Use **Stop** to cancel an in-flight run, or **Reset & unload** to clear state and unload models.
 
-## Notes
-
-- This project currently uses JavaScript (`.jsx`) rather than TypeScript.
-- If your backend differs from `/api/v1/*`, update the API path in `src/App.jsx`.
