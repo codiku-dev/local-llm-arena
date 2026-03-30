@@ -46,11 +46,6 @@ Run development server:
 npm run dev
 ```
 
-Alternative:
-
-```bash
-npm run dev
-```
 
 By default, the app runs on [http://localhost:3000](http://localhost:3000).
 
