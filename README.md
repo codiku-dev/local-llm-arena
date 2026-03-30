@@ -4,6 +4,11 @@ Simple web app to compare outputs from two local LLM models side by side.
 
 It is designed to work with any server exposing an OpenAI-compatible API shape (for example LM Studio or Ollama-compatible gateways).
 
+## Preview
+
+![Local LLM Arena demo](./src/assets/demo.png)
+
+
 ## Features
 
 - Compare **Model A** and **Model B** on the same prompt
@@ -69,7 +74,4 @@ npm run preview
 4. Enter a prompt and click **Run**.
 5. Use **Stop** to cancel an in-flight run, or **Reset & unload** to clear state and unload models.
 
-## Demo
-
-![Local LLM Arena demo](./src/assets/demo.png)
 
