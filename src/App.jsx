@@ -3,7 +3,7 @@ import swordsLogo from './assets/swords-battle.svg'
 
 const DEFAULT_HOST = 'localhost'
 const DEFAULT_PORT = '1234'
-const API_PATH = '/api/v1'
+const API_PATH = '/v1'
 const DEFAULT_PROMPT = 'Draw an animated red spining cube. Do not comment , answer exclusively with the code. Use html,css and js.'
 const MAX_HISTORY = 50
 
@@ -188,6 +188,27 @@ function buildApiBase(host, port) {
   return `http://${normalizedHost}:${normalizedPort}${API_PATH}`
 }
 
+function extractModelArray(payload) {
+  if (Array.isArray(payload)) return payload
+  if (Array.isArray(payload?.models)) return payload.models
+  if (Array.isArray(payload?.data)) return payload.data
+  return []
+}
+
+function normalizeModelList(payload) {
+  return extractModelArray(payload)
+    .map((m) => {
+      const key = typeof m?.key === 'string' ? m.key : (typeof m?.id === 'string' ? m.id : '')
+      if (!key) return null
+      const label =
+        typeof m?.key === 'string'
+          ? m.key
+          : (typeof m?.id === 'string' ? m.id : key)
+      return { key, label }
+    })
+    .filter(Boolean)
+}
+
 function App() {
   const [models, setModels] = useState([])
   const [loadingModels, setLoadingModels] = useState(false)
@@ -212,7 +233,7 @@ function App() {
       setLoadingModels(true)
       const response = await fetch(`${buildApiBase(host, port)}/models`)
       const data = await response.json()
-      setModels(data.models || [])
+      setModels(normalizeModelList(data))
     } catch (err) {
       setError('Failed to load models from server')
     } finally {
@@ -227,7 +248,7 @@ function App() {
   async function fetchServerModels() {
     const response = await fetch(`${apiBase}/models`)
     const data = await response.json()
-    return data.models || data
+    return extractModelArray(data)
   }
 
   async function unloadAllOthersExcept(keepKeys, abortController) {
@@ -235,7 +256,9 @@ function App() {
     const keep = new Set(keepKeys)
 
     for (const m of serverModels || []) {
-      if (keep.has(m.key)) continue
+      const modelKey =
+        typeof m?.key === 'string' ? m.key : (typeof m?.id === 'string' ? m.id : null)
+      if (modelKey && keep.has(modelKey)) continue
 
       const loaded = Array.isArray(m.loaded_instances) ? m.loaded_instances : []
       for (const inst of loaded) {
@@ -430,7 +453,7 @@ function App() {
   }
 
   async function callModel(modelName, userPrompt, abortController) {
-    const response = await fetch(`${apiBase}/chat`, {
+    const response = await fetch(`${apiBase}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -438,11 +461,7 @@ function App() {
       signal: abortController?.signal,
       body: JSON.stringify({
         model: modelName,
-        input: [
-          { type: 'text', content: userPrompt }
-
-          // { type: 'text', content: userPrompt+ ".VERY IMPORTANT : Return ONLY the code, don't return other texts, no comments, don't show your thinking." }
-        ],
+        messages: [{ role: 'user', content: userPrompt }],
         stream: false
       })
     })
@@ -655,7 +674,7 @@ function App() {
   const isRunning = loadingA || loadingB
   let submitLabel = 'Run'
   if (isRunning) {
-    submitLabel = 'Relancer'
+    submitLabel = 'Rerun'
   }
 
   function mainArenaSide(sideKey, modelKeyThisRun, modelKeyLatestBattle) {
@@ -864,7 +883,7 @@ function App() {
                       <option value="">Select model</option>
                       {models.map((m) => (
                         <option key={m.key} value={m.key}>
-                          {m.key}
+                          {m.label}
                         </option>
                       ))}
                     </>
@@ -910,7 +929,7 @@ function App() {
                       <option value="">Select model</option>
                       {models.map((m) => (
                         <option key={m.key} value={m.key}>
-                          {m.key}
+                          {m.label}
                         </option>
                       ))}
                     </>
