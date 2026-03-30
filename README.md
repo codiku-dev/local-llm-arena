@@ -69,3 +69,7 @@ npm run preview
 4. Enter a prompt and click **Run**.
 5. Use **Stop** to cancel an in-flight run, or **Reset & unload** to clear state and unload models.
 
+## Demo
+
+![Local LLM Arena demo](./src/assets/demo.png)
+

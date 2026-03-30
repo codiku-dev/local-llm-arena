@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import swordsLogo from './swords-battle.svg'
+import swordsLogo from './assets/swords-battle.svg'
 
 const DEFAULT_HOST = 'localhost'
 const DEFAULT_PORT = '1234'
